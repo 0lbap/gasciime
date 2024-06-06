@@ -8,11 +8,10 @@
 
 - [x] Automatic window size detection
 - [x] Customizable FPS value
-- [x] Basic drawing methods (point, line, rectangle, circle, ellipsis text)
+- [x] Basic drawing methods (point, line, rectangle, ellipsis, circle and text)
 - [x] Keyboard input handling and events
 - [x] Lazy display: only redraw the screen when something has changed
-- [ ] Use the terminal's alternate screen [^1]
-      [^1]: Using the [curses](https://docs.python.org/3/library/curses.html) module
+- [ ] Use the terminal's alternate screen (using the [curses](https://docs.python.org/3/library/curses.html) module)
 
 ## Installation
 
