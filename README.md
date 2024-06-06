@@ -2,11 +2,17 @@
 
 **Gasciime** (/ɡæs kɪm/) is an ASCII Python game engine for building terminal based games. It is inspired by the LÖVE Lua game engine.
 
-> This project is still under development.
+<p align="center"><img src="example.gif" /></p>
 
 ## Features
 
-- TODO
+- [x] Automatic window size detection
+- [x] Customizable FPS value
+- [x] Basic drawing methods (point, line, rectangle, circle, ellipsis text)
+- [x] Keyboard input handling and events
+- [x] Lazy display: only redraw the screen when something has changed
+- [ ] Use the terminal's alternate screen [^1]
+      [^1]: Using the [curses](https://docs.python.org/3/library/curses.html) module
 
 ## Installation
 

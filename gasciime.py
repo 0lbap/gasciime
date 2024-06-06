@@ -15,7 +15,6 @@ class Game():
     self._fps = 1
     self._running = False
     self._listener = keyboard.Listener(on_press = self.on_key_press, on_release = self.on_key_release)
-    self._alternate_screen = True
     self.load()
     print("Game loaded.")
   
