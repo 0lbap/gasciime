@@ -6,12 +6,13 @@
 
 ## Features
 
-- [x] Automatic window size detection
+- [x] Dynamic window size (and resize) detection
 - [x] Customizable FPS value
 - [x] Basic drawing methods (point, line, rectangle, ellipsis, circle and text)
 - [x] Keyboard input handling and events
-- [x] Lazy display: only redraw the screen when something has changed
-- [ ] Use the terminal's alternate screen (using the [curses](https://docs.python.org/3/library/curses.html) module)
+- [x] Use the terminal's alternate screen
+
+> Note: Gasciime uses the [curses](https://docs.python.org/3/library/curses.html) module for its backend.
 
 ## Installation
 
@@ -29,7 +30,7 @@ You can begin writing your own game by extending the `Game` class. Then, you wil
 
 ```py
 from gasciime import Game
-from pynput import keyboard
+import curses
 
 class MyGame(Game):
   def load(self):
@@ -37,15 +38,15 @@ class MyGame(Game):
     self.player_y = 10
 
   def on_key_press(self, key):
-    if key == keyboard.Key.up:
+    if key == curses.KEY_UP:
       self.player_y -= 1
-    elif key == keyboard.Key.down:
+    elif key == curses.KEY_DOWN:
       self.player_y += 1
-    if key == keyboard.Key.left:
+    if key == curses.KEY_LEFT:
       self.player_x -= 1
-    elif key == keyboard.Key.right:
+    elif key == curses.KEY_RIGHT:
       self.player_x += 1
-    if key == keyboard.KeyCode.from_char("q"):
+    if key == ord("q"):
       self.stop()
 
   def draw(self):
