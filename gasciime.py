@@ -1,31 +1,35 @@
 import sys
 import os
 import time
-from pynput import keyboard
+import curses
 
-# TODO: rewrite screen with curses (use of alternate screen)
 class Game():
   """
   A basic game class intended to be extended, which provides useful methods.
   """
   def __init__(self):
-    self._window_width = os.get_terminal_size().columns
-    self._window_height = os.get_terminal_size().lines
-    self._screen = [[" " for i in range(self._window_width)] for j in range(self._window_height)]
+    self._stdscr = curses.initscr()
+    curses.noecho()
+    curses.cbreak()
+    curses.curs_set(False)
+    self._stdscr.keypad(True)
+    self._stdscr.nodelay(True)
+    self._stdscr.scrollok(False)
     self._fps = 1
     self._running = False
-    self._listener = keyboard.Listener(on_press = self.on_key_press, on_release = self.on_key_release)
     self.load()
-    print("Game loaded.")
-  
-  def _draw_screen(self):
-    for row in self._screen:
-      for column in row:
-        print(column, end="")
-      print()
 
-  def _clear_screen(self):
-    self._screen = [[" " for i in range(self._window_width)] for j in range(self._window_height)]
+  def get_width(self):
+    """
+    Returns the width of the terminal window.
+    """
+    return curses.COLS
+  
+  def get_height(self):
+    """
+    Returns the height of the terminal window.
+    """
+    return curses.LINES
 
   def draw_point(self, x, y, char="."):
     """
@@ -35,11 +39,11 @@ class Game():
     :param y: The y coordinate.
     :param char: The character to display.
     """
-    if x < 0 or x >= self._window_width:
+    if x < 0 or x >= self.get_width():
       return
-    if y < 0 or y >= self._window_height:
+    if y < 0 or y >= self.get_height():
       return
-    self._screen[y][x] = char
+    self._stdscr.addch(y, x, char)
 
   def draw_line(self, x1, y1, x2, y2, char="."):
     """
@@ -96,7 +100,7 @@ class Game():
       else:
         d += 2 * dx
 
-  def draw_rect(self, x, y, w, h, row_char = "─", column_char = "│", top_left_corner_char = "┌", top_right_corner_char = "┐", bottom_left_corner_char = "└", bottom_right_corner_char = "┘"):
+  def draw_rect(self, x, y, w, h, row_char = "-", column_char = "|", top_left_corner_char = "+", top_right_corner_char = "+", bottom_left_corner_char = "+", bottom_right_corner_char = "+"):
     """
     Draw a rectangle of width w and height h. The top left corner is located at (x, y). All characters can be changed, including the lines and the corners.
 
@@ -231,17 +235,9 @@ class Game():
 
   def on_key_press(self, key):
     """
-    Called when a key is pressed.
+    Called each frame. This is where you want to put your keyboard input logic.
 
-    :param key: The code of the pressed key.
-    """
-    pass
-
-  def on_key_release(self, key):
-    """
-    Called when a key is released.
-
-    :param key: The code of the released key.
+    :param key: The code of the pressed key (see curses' `getch()` documentation for more information).
     """
     pass
 
@@ -256,21 +252,24 @@ class Game():
     Start the game execution.
     """
     self._running = True
-    self._listener.start()
-    print("Game started.")
-    while self._running:
-      previous_screen = self._screen
-      self._clear_screen()
-      self.draw()
-      if previous_screen != self._screen:
-        self._draw_screen()
-      time.sleep(1 / self._fps)
+    try:
+      while self._running:
+        curses.update_lines_cols()
+        self._stdscr.clear()
+        self.draw()
+        ch = self._stdscr.getch()
+        self.on_key_press(ch)
+        time.sleep(1 / self._fps)
+    except:
+      self.stop()
 
   def stop(self):
     """
     Stop the game execution and exit the program.
     """
-    self._listener.stop()
+    curses.nocbreak()
+    self._stdscr.keypad(False)
+    curses.echo()
+    curses.endwin()
     self._running = False
-    print("Game stopped.")
     sys.exit(0)
