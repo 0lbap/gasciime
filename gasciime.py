@@ -39,11 +39,13 @@ class Game():
     :param y: The y coordinate.
     :param char: The character to display.
     """
+    if len(char) != 1:
+      return
     if x < 0 or x >= self.get_width():
       return
     if y < 0 or y >= self.get_height():
       return
-    self._stdscr.addch(y, x, char)
+    self._stdscr.addstr(y, x, char)
 
   def draw_line(self, x1, y1, x2, y2, char="."):
     """
