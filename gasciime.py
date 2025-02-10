@@ -117,18 +117,21 @@ class Game():
     :param bottom_left_corner_char: The character used to display the bottom left corner.
     :param bottom_right_corner_char: The character used to display the bottom right corner.
     """
-    self.draw_point(x    , y    , top_left_corner_char)
-    self.draw_point(x + w, y    , top_right_corner_char)
-    self.draw_point(x    , y + h, bottom_left_corner_char)
-    self.draw_point(x + w, y + h, bottom_right_corner_char)
-    for i in range(x + 1, x + w):
-      self.draw_point(i, y, row_char)
-    for i in range(x + 1, x + w):
-      self.draw_point(i, y + h, row_char)
-    for j in range(y + 1, y + h):
-      self.draw_point(x, j, column_char)
-    for j in range(y + 1, y + h):
-      self.draw_point(x + w, j, column_char)
+    right_x = x + w - 1
+    bottom_y = y + h - 1
+
+    self.draw_point(x, y, top_left_corner_char)
+    self.draw_point(right_x, y, top_right_corner_char)
+    self.draw_point(x, bottom_y, bottom_left_corner_char)
+    self.draw_point(right_x, bottom_y, bottom_right_corner_char)
+
+    for i in range(x + 1, right_x):
+        self.draw_point(i, y, row_char)
+        self.draw_point(i, bottom_y, row_char)
+
+    for j in range(y + 1, bottom_y):
+        self.draw_point(x, j, column_char)
+        self.draw_point(right_x, j, column_char)
 
   def draw_ellipsis(self, x1, y1, x2, y2, char = "."):
     """
@@ -243,6 +246,12 @@ class Game():
     """
     pass
 
+  def update(self):
+    """
+    Called every frame before `draw()`. This is where you want to run your update logic.
+    """
+    pass
+
   def draw(self):
     """
     Called every frame. This is where you want to draw all your sprites.
@@ -257,6 +266,7 @@ class Game():
     try:
       while self._running:
         curses.update_lines_cols()
+        self.update()
         self._stdscr.clear()
         self.draw()
         ch = self._stdscr.getch()
